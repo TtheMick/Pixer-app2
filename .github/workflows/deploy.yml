@@ -1,0 +1,39 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    env:
+      IMAGE_NAME: pixer-app2
+      IMAGE_TAG: latest
+      REGISTRY: docker.io
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Build Docker image
+      run: |
+        docker build -t $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
+
+    - name: Push Docker image
+      run: |
+        docker push $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
+
+    - name: Stop and remove old container (if exists)
+      run: |
+        if [ "$(docker ps -q -f name=$IMAGE_NAME)" ]; then docker stop $IMAGE_NAME; fi
+        if [ "$(docker ps -aq -f name=$IMAGE_NAME)" ]; then docker rm $IMAGE_NAME; fi
+
+    - name: Run new container
+      run: |
+        docker run -d --name $IMAGE_NAME -p 3000:80 $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
+
