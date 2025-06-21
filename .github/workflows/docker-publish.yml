@@ -9,6 +9,11 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_NAME: pixer-app2
+      IMAGE_TAG: latest
+      REGISTRY: docker.io
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -26,10 +31,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install dependencies and build (optional, if you have build step)
+      - name: Install dependencies and build (optional)
         run: |
           npm install
-          # If you have a build script, e.g. `npm run build`, uncomment below:
+          # Uncomment if needed
           # npm run build
 
       - name: Log in to Docker Hub
@@ -38,7 +43,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-            - name: Build Docker image
+      - name: Build Docker image
         run: |
           docker build -t $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
 
