@@ -11,3 +11,4 @@ Project
 # trigger
 # trigger
 # docker login test
+# trigger build without buildx
