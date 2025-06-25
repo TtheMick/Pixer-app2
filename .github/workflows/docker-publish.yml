@@ -42,8 +42,10 @@ jobs:
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         with:
+          organisation: tthemick
+          projectkey: TtheMick_pixer-app2
           projectBaseDir: .
-        env:
+       env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Log in to Docker Hub
