@@ -37,8 +37,6 @@ jobs:
 
       - name: Build app
         run: npm run build
-        # Make sure your package.json has a "build" script if you need this step.
-        # If your project does not need a build step, you can comment or remove this step.
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
