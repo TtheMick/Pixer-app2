@@ -1,13 +1,14 @@
 {
-  "name": "pixer-app",
+  "name": "pixer-app2",
   "version": "1.0.0",
-  "description": "A basic Node.js app",
+  "description": "Pixer-app2 for Docker and SonarCloud CI/CD",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "echo \"No tests yet\""
   },
-  "author": "You",
-  "license": "MIT",
+  "author": "Ononye Michael",
+  "license": "ISC",
   "dependencies": {}
 }
 
