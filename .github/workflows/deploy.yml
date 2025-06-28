@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted, linux, x64
 
     env:
       IMAGE_NAME: pixer-app2
