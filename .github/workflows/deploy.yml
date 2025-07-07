@@ -2,15 +2,13 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
-    runs-on: self-hosted, linux, x64
+    runs-on: ubuntu-latest  # ✅ Use GitHub runner
 
     env:
       IMAGE_NAME: pixer-app2
@@ -25,12 +23,10 @@ jobs:
         run: echo "${{ secrets.DOCKER_HUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker image
-        run: |
-          docker build -t $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
+        run: docker build -t $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG .
 
       - name: Push Docker image
-        run: |
-          docker push $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
+        run: docker push $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
 
       - name: Stop and remove old container (if exists)
         run: |
@@ -38,6 +34,5 @@ jobs:
           if [ "$(docker ps -aq -f name=$IMAGE_NAME)" ]; then docker rm $IMAGE_NAME; fi
 
       - name: Run new container
-        run: |
-          docker run -d --name $IMAGE_NAME -p 3000:80 $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
+        run: docker run -d --name $IMAGE_NAME -p 3000:80 $REGISTRY/${{ secrets.DOCKER_USERNAME }}/$IMAGE_NAME:$IMAGE_TAG
 
